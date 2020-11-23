@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import api from '../../services/api';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -17,7 +18,7 @@ import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
 
 interface SingUpFormData {
     name: string;
-    email:string;
+    email: string;
     password: string;
 }
 
@@ -40,9 +41,11 @@ const SignUp: React.FC = () => {
 
             await schema.validate(data, { abortEarly: false });
 
-            // await api.post('/users', data);
+            await api.post('/users', data);
 
-            // history.push('/');
+            Alert.alert('Cadastro realizado com sucesso', 'Voce ja pode fazer login na aplicacao');
+
+            navigation.goBack();
 
         } catch (err) {
             if (err instanceof Yup.ValidationError) {
@@ -52,10 +55,11 @@ const SignUp: React.FC = () => {
 
                 return;
             }
+            console.log(err);
 
-            Alert.alert('Erro no cadastro','Ocorreu um erro ao fazer o cadastro, tente novamente.');
+            Alert.alert('Erro no cadastro', 'Ocorreu um erro ao fazer o cadastro, tente novamente.');
         }
-    }, []);
+    }, [navigation]);
 
     return (
         <>
